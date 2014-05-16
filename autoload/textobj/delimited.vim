@@ -111,7 +111,6 @@ function! s:prototype(kind) "{{{
     if (head != [0, 0]) && (tail != [0, 0])
       let body = string[head[1]-1 : tail[1]-1]
 
-      PP! [body, (body =~# '^' . delimited . '$')]
       if (body =~# '^' . delimited . '$')
         let candidates += [[delimiter, body, head[1], tail[1]]]
       endif
