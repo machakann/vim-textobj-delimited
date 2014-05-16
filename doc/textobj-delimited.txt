@@ -1,0 +1,240 @@
+*textobj-delimited.txt*                               Last change:16-May-2014.
+
+The textobject plugin to do well with each delimited parts of string.
+
+
+Requirements:
+- textobj-user <http://www.vim.org/scripts/script.php?script_id=2100>
+               <https://github.com/kana/vim-textobj-user>
+
+Author  : machakann <mckn@outlook.com>
+License : NYSL license
+          Japanese <http://www.kmonos.net/nysl/>
+          English (Unofficial) <http://www.kmonos.net/nysl/index.en.html>
+
+==============================================================================
+CONTENTS                                          *textobj-delimited-contents*
+
+INTRODUCTION            |textobj-delimited-introduction|
+KEYMAPPINGS             |textobj-delimited-keymappings|
+CONFIGURATION           |textobj-delimited-configuration|
+
+==============================================================================
+INTRODUCTION                                  *textobj-delimited-introduction*
+
+*textobj-delimited* is a Vim plugin to implement textobjects to select a part
+of a delimited string. When you edit a source code, you will see delimited
+words like:
+>
+        let abc_def_ghi = 0     " snake-case
+<
+or
+>
+        let abcDefGhi = 0       " camel-case
+<
+Sometimes you want to edit a part of them, but the problem is these characters
+are included in 'iskeyword' option, thus you can not use the textobject like
+|iw|, |aw|. This plugin provides you textobjects to recognize these delimited
+words and select a part of them. For example, think about the following
+situation:
+>
+                 #          : cursor
+        let abc_def_ghi = 0
+<
+If you use |d||<Plug>(textobj-delimited-forward-i)|, you will see
+>
+                #           : cursor
+        let abc__ghi = 0
+<
+Or, if you use |d||<Plug>(textobj-delimited-forward-a)|, you will see
+>
+               #            : cursor
+        let abc_ghi = 0
+<
+These keymappings respond to the words delimited by _, #, capital characters
+and - in default. You can define your rule by |g:textobj_delimited_patterns|.
+Check |textobj-delimited-configuration|.
+
+
+
+------------------------------------------------------------------------------
+At the beginning and the end of a words, |<Plug>(textobj-delimited-forward-a)|
+works tricky. Look the following examples.
+
+At the beginning of a word~
+If you use |d||<Plug>(textobj-delimited-forward-a)|, it deletes '_abc_'
+instead of '_abc'.
+>
+         #                     #        : cursor
+        _abc_def_ghi_    ->    def_ghi_
+<
+
+At the end of a word~
+If you use |d||<Plug>(textobj-delimited-forward-a)|, it deletes '_ghi_'
+instead of '_ghi'.
+>
+                 #                    # : cursor
+        _abc_def_ghi_    ->    _abc_def
+<
+
+
+
+------------------------------------------------------------------------------
+These textobjects can accept {count}, however {count} will be interpreted in
+unique way. {count} is used for assigning which part in a delimited word.
+>
+        ------------------------------------------------
+         key input: d1<Plug>(textobj-delimited-forward-i)
+              #                #         : cursor
+         'abc_def_ghi'   ->   '_def_ghi'
+        ------------------------------------------------
+         key input: d2<Plug>(textobj-delimited-forward-i)
+          #                        #     : cursor
+         'abc_def_ghi'   ->   'abc__ghi'
+        ------------------------------------------------
+         key input: d3<Plug>(textobj-delimited-forward-i)
+          #                           #  : cursor
+         'abc_def_ghi'   ->   'abc_def_'
+        ------------------------------------------------
+         key input: d1<Plug>(textobj-delimited-forward-a)
+              #                #         : cursor
+         'abc_def_ghi'   ->   'def_ghi'
+        ------------------------------------------------
+         key input: d2<Plug>(textobj-delimited-forward-a)
+          #                        #     : cursor
+         'abc_def_ghi'   ->   'abc_ghi'
+        ------------------------------------------------
+         key input: d3<Plug>(textobj-delimited-forward-a)
+          #                          #   : cursor
+         'abc_def_ghi'   ->   'abc_def'
+        ------------------------------------------------
+<
+If the large number is assigned for {count}, it will be recognized as the last
+candidate of the parts.
+
+
+
+------------------------------------------------------------------------------
+You do not need to move your cursor to the word.
+|<Plug>(textobj-delimited-forward-i)| and
+|<Plug>(textobj-delimited-forward-a)| searches a delimited word to the end of
+the file inside the line.
+|<Plug>(textobj-delimited-backward-i)| and
+|<Plug>(textobj-delimited-backward-i)| searches a delimited word to the
+beginning of the file inside the line.
+
+
+
+
+
+==============================================================================
+KEYMAPPINGS                                    *textobj-delimited-keymappings*
+
+This plugin serves following keymappings.
+
+direction       keymappings                             default keymappings
+--------------------------------------------------------------------------
+forward         <Plug>(textobj-delimited-forward-i)     id
+                <Plug>(textobj-delimited-forward-a)     ad
+
+backward        <Plug>(textobj-delimited-backward-i)    Id
+                <Plug>(textobj-delimited-backward-a)    Ad
+--------------------------------------------------------------------------
+
+If you do not need default keymappings, define a variable named
+|g:textobj_delimited_no_default_key_mappings| in your vimrc.
+>
+        let g:textobj_delimited_no_default_key_mappings = 1
+<
+Then default mappings are never applied. And map them again as you like.
+>
+        xmap iD <Plug>(textobj-delimited-forward-i)
+        xmap aD <Plug>(textobj-delimited-forward-a)
+        omap iD <Plug>(textobj-delimited-forward-i)
+        omap aD <Plug>(textobj-delimited-forward-a)
+<
+
+------------------------------------------------------------------------------
+keymappings~
+<Plug>(textobj-delimited-forward-i)      *<Plug>(textobj-delimited-forward-i)*
+        This keymapping selects a part of a delimited string without
+        delimiter. If the word under the cursor is not a delimited word, it
+        searches a target for forward direction.
+
+<Plug>(textobj-delimited-forward-a)      *<Plug>(textobj-delimited-forward-a)*
+        This keymapping selects a part of a delimited string with
+        delimiter(s). If the word under the cursor is not a delimited word, it
+        searches a target for forward direction.
+
+<Plug>(textobj-delimited-backward-i)    *<Plug>(textobj-delimited-backward-i)*
+        This keymapping selects a part of a delimited string without
+        delimiter. If the word under the cursor is not a delimited word, it
+        searches a target for backward direction.
+
+<Plug>(textobj-delimited-forward-a)     *<Plug>(textobj-delimited-backward-a)*
+        This keymapping selects a part of a delimited string with
+        delimiter(s). If the word under the cursor is not a delimited word, it
+        searches a target for backward direction.
+
+
+
+
+
+==============================================================================
+CONFIGURATION                                *textobj-delimited-configuration*
+
+                                 *g:textobj_delimited_no_default_key_mappings*
+g:textobj_delimited_no_default_key_mappings
+        If you define this valiable in your vimrc, default keymappings do not
+        prepared. If you want to use "id", "ad", "Id", "Ad" for other
+        mappings, this would be helpful.
+
+g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
+        You can make your preferable settings for the recognition of delimited
+        words. |g:textobj_delimited_patterns| is a list includes lists which
+        have two or three items. The first one is a regular expression pattern
+        to assign a delimiter, the second one is a regular expression pattern
+        to assign a whole body of a delimited word, and, the third one is a
+        regular expression pattern to specify the situation. The third item
+        can be omitted, then the second pattern is used. The matched range of
+        third pattern should be same as second item. Vim regular expression
+        pattern |\zs| and |\ze| would be useful. The equivalent to the default
+        pattern is like this:
+
+>
+        let g:textobj_delimited_patterns = [
+          \ ['_'         , '\<\%(_\k\+\|\k\+_\)\%(\k*_\?\)*\>'],
+          \ ['\C\ze[A-Z]', '\C\<[A-Z]\?\k\+[A-Z]\%(\k*[A-Z]\?\)*\>'],
+          \ ['#'         , '\<\%(#\k\+\|\k\+#\)\%(\k*#\?\)*\>'],
+          \ ['-'         , '\<\%(-\k\+\|\k\+-\)\%(\k*-\?\)*\>'],
+          \ ]
+<
+
+        If you want to make a pattern for namelist expression in FORTRAN,
+>
+        ! FORTRAN is still alive!
+        namelist /parameters/ abc, def, ghi
+<
+        you can use a pattern like:
+>
+        let g:textobj_delimited_patterns += [
+          \ [',\s*',
+          \  '\%(\h\k*,\s*\)*\h\k*',
+          \  '\cnamelist\s\+/\h\k*/\s\+\zs\%(\h\k*,\s*\)*\h\k*'
+          \ ]
+<
+
+        In fact, you can also use other than the "g:" scope, "t:", "w:", "b:".
+        If more than two of valiables can be accesible, they are used in the
+        priority of "b:", "w:", "t:", "g:".
+>
+        let b:textobj_delimited_patterns = [
+          \ ['_'         , '\<\%(_\k\+\|\k\+_\)\%(\k*_\?\)*\>'],
+          \ ['\C\ze[A-Z]', '\C\<[A-Z]\?\k\+[A-Z]\%(\k*[A-Z]\?\)*\>'],
+          \ ['#'         , '\<\%(#\k\+\|\k\+#\)\%(\k*#\?\)*\>'],
+          \ ['-'         , '\<\%(-\k\+\|\k\+-\)\%(\k*-\?\)*\>'],
+          \ ]
+<
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:noet:

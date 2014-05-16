@@ -1,0 +1,238 @@
+*textobj-delimited.jax*  日本語版ヘルプ               Last change:16-May-2014.
+
+区切られた文字列の一部分をうまいことするためのテキストオブジェクトです。
+
+
+必要なもの:
+- textobj-user <http://www.vim.org/scripts/script.php?script_id=2100>
+               <https://github.com/kana/vim-textobj-user>
+
+書いた人   : machakann <mckn@outlook.com>
+ライセンス : NYSL license
+             Japanese <http://www.kmonos.net/nysl/>
+             English (Unofficial) <http://www.kmonos.net/nysl/index.en.html>
+
+==============================================================================
+CONTENTS                                          *textobj-delimited-contents*
+
+INTRODUCTION            |textobj-delimited-introduction|
+KEYMAPPINGS             |textobj-delimited-keymappings|
+CONFIGURATION           |textobj-delimited-configuration|
+
+==============================================================================
+INTRODUCTION                                  *textobj-delimited-introduction*
+
+*textobj-delimited* は特定のパターンによって区切られた文字列の一部分を選択する
+ためのテキストオブジェクトを提供します。例えばソースコードを編集中、次のような
+区切られた文字列をよく見ることでしょう。
+>
+        let abc_def_ghi = 0     " snake-case
+<
+あるいは
+>
+        let abcDefGhi = 0       " camel-case
+<
+この場合、変数名がこのプラグインの対象となります。この変数名の一部分だけを編集
+したくなることがあるとします、しかし問題はこれらの文字は 'iskeyword' オプショ
+ンに含まれているため、 |iw| や |aw| といったテキストオブジェクトは使えないとい
+うことです。困りました。ここでこのプラグインの出番です、このプラグインはこのよ
+うな文字列の一部分だけを選択するための機能を提供します。たとえば次のような場合
+を考えてみましょう。
+>
+                 #          : カーソル
+        let abc_def_ghi = 0
+<
+|d||<Plug>(textobj-delimited-forward-i)| を使うと次のような効果を得られます。
+>
+                #           : カーソル
+        let abc__ghi = 0
+<
+または |d||<Plug>(textobj-delimited-forward-a)| を使うと次のような効果を得られ
+ます。
+>
+               #            : カーソル
+        let abc_ghi = 0
+<
+これらのキーマッピングはデフォルトで _(アンダースコア)、 #(シャープ)、アルファ
+ベットの大文字、-(ハイフン)で区切られた文字列に反応します。対象は
+ |g:textobj_delimited_patterns| によってお好みで定義することができます。
+ |textobj-delimited-configuration| をご参照ください。
+
+
+
+------------------------------------------------------------------------------
+単語の先頭と末尾において |<Plug>(textobj-delimited-forward-a)| は少しだけ特殊
+な挙動を示します。次の例を見てみてください。
+
+単語の先頭~
+ |d||<Plug>(textobj-delimited-forward-a)| を使うと '_abc' のかわりに '_abc_'
+を消去します。
+>
+         #                     #        : カーソル
+        _abc_def_ghi_    ->    def_ghi_
+<
+
+単語の末尾~
+ |d||<Plug>(textobj-delimited-forward-a)| を使うと '_ghi' のかわりに '_ghi_'
+を消去します。
+>
+                 #                    # : カーソル
+        _abc_def_ghi_    ->    _abc_def
+<
+
+
+
+------------------------------------------------------------------------------
+これらのテキストオブジェクトはカウントを受け付けますが、その解釈方法はちょっと
+特殊です。カウントは何番目の部分を選択するかを指定するために使われます。
+>
+        ------------------------------------------------
+         key input: d1<Plug>(textobj-delimited-forward-i)
+              #                #         : カーソル
+         'abc_def_ghi'   ->   '_def_ghi'
+        ------------------------------------------------
+         key input: d2<Plug>(textobj-delimited-forward-i)
+          #                        #     : カーソル
+         'abc_def_ghi'   ->   'abc__ghi'
+        ------------------------------------------------
+         key input: d3<Plug>(textobj-delimited-forward-i)
+          #                           #  : カーソル
+         'abc_def_ghi'   ->   'abc_def_'
+        ------------------------------------------------
+         key input: d1<Plug>(textobj-delimited-forward-a)
+              #                #         : カーソル
+         'abc_def_ghi'   ->   'def_ghi'
+        ------------------------------------------------
+         key input: d2<Plug>(textobj-delimited-forward-a)
+          #                        #     : カーソル
+         'abc_def_ghi'   ->   'abc_ghi'
+        ------------------------------------------------
+         key input: d3<Plug>(textobj-delimited-forward-a)
+          #                          #   : カーソル
+         'abc_def_ghi'   ->   'abc_def'
+        ------------------------------------------------
+<
+もし、存在する部分の数よりも大きなカウントが指定された場合、最後の部分を対象と
+します。
+
+
+
+------------------------------------------------------------------------------
+実のところ、必ずしもカーソルが区切られた文字列の上にある必要はありません。
+|<Plug>(textobj-delimited-forward-i)| と
+|<Plug>(textobj-delimited-forward-a)| は対象とする文字列を行の中から右方向へ検
+索します。
+|<Plug>(textobj-delimited-backward-i)| と
+|<Plug>(textobj-delimited-backward-i)| は対象とする文字列を行の中から左方向へ
+検索します。
+
+
+
+
+
+==============================================================================
+KEYMAPPINGS                                    *textobj-delimited-keymappings*
+
+このプラグインは次に掲げるキーマッピングを提供します。
+
+検索方向        キーマッピング                          デフォルト設定
+--------------------------------------------------------------------------
+forward         <Plug>(textobj-delimited-forward-i)     id
+                <Plug>(textobj-delimited-forward-a)     ad
+
+backward        <Plug>(textobj-delimited-backward-i)    Id
+                <Plug>(textobj-delimited-backward-a)    Ad
+--------------------------------------------------------------------------
+
+もし、デフォルトのキーマッピングがお気に召さなければ
+|g:textobj_delimited_no_default_key_mappings| をあなたの vimrc に定義しましょ
+う。
+>
+        let g:textobj_delimited_no_default_key_mappings = 1
+<
+こうすれば、デフォルトのキーマッピングは設定されません。あとはお好みのキーへ設
+定しなおしましょう。
+>
+        xmap iD <Plug>(textobj-delimited-forward-i)
+        xmap aD <Plug>(textobj-delimited-forward-a)
+        omap iD <Plug>(textobj-delimited-forward-i)
+        omap aD <Plug>(textobj-delimited-forward-a)
+<
+
+------------------------------------------------------------------------------
+keymappings~
+<Plug>(textobj-delimited-forward-i)      *<Plug>(textobj-delimited-forward-i)*
+　　　　区切られた文字列の一部分を、区切り文字を含めずに選択します。もしカーソ
+        ルが対象とする文字列の上になければ行の中を右方向へ検索します。
+
+<Plug>(textobj-delimited-forward-a)      *<Plug>(textobj-delimited-forward-a)*
+　　　　区切られた文字列の一部分を、区切り文字を含めて選択します。もしカーソ
+        ルが対象とする文字列の上になければ行の中を右方向へ検索します。
+
+<Plug>(textobj-delimited-backward-i)    *<Plug>(textobj-delimited-backward-i)*
+　　　　区切られた文字列の一部分を、区切り文字を含めずに選択します。もしカーソ
+        ルが対象とする文字列の上になければ行の中を左方向へ検索します。
+
+<Plug>(textobj-delimited-forward-a)     *<Plug>(textobj-delimited-backward-a)*
+　　　　区切られた文字列の一部分を、区切り文字を含めて選択します。もしカーソ
+        ルが対象とする文字列の上になければ行の中を左方向へ検索します。
+
+
+
+
+
+==============================================================================
+CONFIGURATION                                *textobj-delimited-configuration*
+
+                                 *g:textobj_delimited_no_default_key_mappings*
+g:textobj_delimited_no_default_key_mappings
+        この変数が定義されているとデフォルトのキーマッピングは設定されません。
+        "id"、 "ad"、 "Id"、 "Ad" を他で使いたい場合などに便利でしょう。
+
+g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
+        対象とする文字列の設定を行うことができます。この変数は二つ及び三つの要
+        素を持つリストを内包したリストとなっています。最初の要素は区切り文字を
+        表す正規表現、次の要素は対象文字列全体を表す正規表現、最後の要素は対象
+        文字列の出現する状況を制限するための正規表現です。最後の要素は省略可能
+        で、その場合直接二つ目の要素が検索されます。最後の要素のマッチする範囲
+        は二つ目の要素と同じになるように設定してください。 Vim の正規表現
+        |\zs| と |\ze| が役に立つことでしょう。デフォルトと等価となる設定は次
+        のようになります。
+
+>
+        let g:textobj_delimited_patterns = [
+          \ ['_'         , '\<\%(_\k\+\|\k\+_\)\%(\k*_\?\)*\>'],
+          \ ['\C\ze[A-Z]', '\C\<[A-Z]\?\k\+[A-Z]\%(\k*[A-Z]\?\)*\>'],
+          \ ['#'         , '\<\%(#\k\+\|\k\+#\)\%(\k*#\?\)*\>'],
+          \ ['-'         , '\<\%(-\k\+\|\k\+-\)\%(\k*-\?\)*\>'],
+          \ ]
+<
+
+        もし、FORTRAN の namelist のためのパターンを作りたければ、
+>
+        ! FORTRAN is still alive!
+        namelist /parameters/ abc, def, ghi
+<
+        次のように書けるでしょう。
+>
+        let g:textobj_delimited_patterns += [
+          \ [',\s*',
+          \  '\%(\h\k*,\s*\)*\h\k*',
+          \  '\cnamelist\s\+/\h\k*/\s\+\zs\%(\h\k*,\s*\)*\h\k*'
+          \ ]
+<
+
+        "g:" スコープ以外でも "t:"、 "w:"、 "b:" スコープの同名変数が使えます
+        。複数の変数が参照可能な範囲にある場合、"b:"、"w:"、"t:"、"g:" の順に
+        優先されます。
+>
+        let b:textobj_delimited_patterns = [
+          \ ['_'         , '\<\%(_\k\+\|\k\+_\)\%(\k*_\?\)*\>'],
+          \ ['\C\ze[A-Z]', '\C\<[A-Z]\?\k\+[A-Z]\%(\k*[A-Z]\?\)*\>'],
+          \ ['#'         , '\<\%(#\k\+\|\k\+#\)\%(\k*#\?\)*\>'],
+          \ ['-'         , '\<\%(-\k\+\|\k\+-\)\%(\k*-\?\)*\>'],
+          \ ]
+<
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:noet:
