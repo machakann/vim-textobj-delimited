@@ -1,4 +1,4 @@
-*textobj-delimited.txt*                               Last change:17-May-2014.
+*textobj-delimited.txt*                               Last change:18-May-2014.
 
 The textobject plugin to do well with each delimited parts of string.
 
@@ -137,8 +137,8 @@ direction       keymappings                             default keymappings
 forward         <Plug>(textobj-delimited-forward-i)     id
                 <Plug>(textobj-delimited-forward-a)     ad
 
-backward        <Plug>(textobj-delimited-backward-i)    Id
-                <Plug>(textobj-delimited-backward-a)    Ad
+backward        <Plug>(textobj-delimited-backward-i)
+                <Plug>(textobj-delimited-backward-a)
 --------------------------------------------------------------------------
 
 If you do not need default keymappings, define a variable named

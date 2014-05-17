@@ -1,4 +1,4 @@
-*textobj-delimited.jax*  日本語版ヘルプ               Last change:17-May-2014.
+*textobj-delimited.jax*  日本語版ヘルプ               Last change:18-May-2014.
 
 区切られた文字列の一部分をうまいことするためのテキストオブジェクトです。
 
@@ -140,8 +140,8 @@ KEYMAPPINGS                                    *textobj-delimited-keymappings*
 forward         <Plug>(textobj-delimited-forward-i)     id
                 <Plug>(textobj-delimited-forward-a)     ad
 
-backward        <Plug>(textobj-delimited-backward-i)    Id
-                <Plug>(textobj-delimited-backward-a)    Ad
+backward        <Plug>(textobj-delimited-backward-i)
+                <Plug>(textobj-delimited-backward-a)
 --------------------------------------------------------------------------
 
 もし、デフォルトのキーマッピングがお気に召さなければ
