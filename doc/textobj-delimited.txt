@@ -1,4 +1,4 @@
-*textobj-delimited.txt*                               Last change:16-May-2014.
+*textobj-delimited.txt*                               Last change:17-May-2014.
 
 The textobject plugin to do well with each delimited parts of string.
 
@@ -192,13 +192,9 @@ g:textobj_delimited_no_default_key_mappings
 g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
         You can make your preferable settings for the recognition of delimited
         words. |g:textobj_delimited_patterns| is a list includes lists which
-        have two or three items. The first one is a regular expression pattern
-        to assign a delimiter, the second one is a regular expression pattern
-        to assign a whole body of a delimited word, and, the third one is a
-        regular expression pattern to specify the situation. The third item
-        can be omitted, then the second pattern is used. The matched range of
-        third pattern should be same as second item. Vim regular expression
-        pattern |\zs| and |\ze| would be useful. The equivalent to the default
+        have two items. The first one is a regular expression pattern to
+        assign a delimiter, the other is a regular expression pattern to
+        assign a whole body of a delimited word. The equivalent to the default
         pattern is like this:
 
 >
@@ -219,7 +215,6 @@ g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
 >
         let g:textobj_delimited_patterns += [
           \ [',\s*',
-          \  '\%(\h\k*,\s*\)*\h\k*',
           \  '\cnamelist\s\+/\h\k*/\s\+\zs\%(\h\k*,\s*\)*\h\k*'
           \ ]
 <

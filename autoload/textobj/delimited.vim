@@ -98,23 +98,37 @@ function! s:prototype(kind) "{{{
   for pattern in patterns
     let delimiter = pattern[0]
     let delimited = pattern[1]
-    let search_pattern = get(pattern, 2, pattern[1])
 
     if a:kind =~# '[ia]'
-      let tail = searchpos(search_pattern, 'ce', orig_pos[0])
-      let head = searchpos(search_pattern, 'bn', orig_pos[0])
+      let flag = 'ce'
     elseif a:kind =~# '[IA]'
-      let head = searchpos(search_pattern, 'bc', orig_pos[0])
-      let tail = searchpos(search_pattern, 'en', orig_pos[0])
+      let flag = 'bc'
     endif
 
-    if (head != [0, 0]) && (tail != [0, 0])
+    while 1
+      if a:kind =~# '[ia]'
+        let tail = searchpos(delimited,  flag, orig_pos[0])
+        let head = searchpos(delimited, 'bcn', orig_pos[0])
+        let flag = 'e'
+      elseif a:kind =~# '[IA]'
+        let head = searchpos(delimited,  flag, orig_pos[0])
+        let tail = searchpos(delimited, 'cen', orig_pos[0])
+        let flag = 'b'
+      endif
+
+      if tail == [0, 0]
+        " no candidate
+        break
+      elseif head == tail
+        " one character cannot be a delimited ward!
+        continue
+      endif
+
       let body = string[head[1]-1 : tail[1]-1]
 
-      if (body =~# '^' . delimited . '$')
-        let candidates += [[delimiter, body, head[1], tail[1]]]
-      endif
-    endif
+      let candidates += [[delimiter, body, head[1], tail[1]]]
+      break
+    endwhile
 
     call cursor(orig_pos)
   endfor

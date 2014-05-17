@@ -1,4 +1,4 @@
-*textobj-delimited.jax*  日本語版ヘルプ               Last change:16-May-2014.
+*textobj-delimited.jax*  日本語版ヘルプ               Last change:17-May-2014.
 
 区切られた文字列の一部分をうまいことするためのテキストオブジェクトです。
 
@@ -190,14 +190,10 @@ g:textobj_delimited_no_default_key_mappings
         "id"、 "ad"、 "Id"、 "Ad" を他で使いたい場合などに便利でしょう。
 
 g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
-        対象とする文字列の設定を行うことができます。この変数は二つ及び三つの要
-        素を持つリストを内包したリストとなっています。最初の要素は区切り文字を
-        表す正規表現、次の要素は対象文字列全体を表す正規表現、最後の要素は対象
-        文字列の出現する状況を制限するための正規表現です。最後の要素は省略可能
-        で、その場合直接二つ目の要素が検索されます。最後の要素のマッチする範囲
-        は二つ目の要素と同じになるように設定してください。 Vim の正規表現
-        |\zs| と |\ze| が役に立つことでしょう。デフォルトと等価となる設定は次
-        のようになります。
+　　　　対象とする文字列の設定を行うことができます。この変数は二つの要素を持つ
+　　　　リストを内包したリストとなっています。最初の要素は区切り文字を表す正規
+　　　　表現、次の要素は対象文字列全体を表す正規表現です。デフォルトと等価とな
+　　　　る設定は次のようになります。
 
 >
         let g:textobj_delimited_patterns = [
@@ -217,7 +213,6 @@ g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
 >
         let g:textobj_delimited_patterns += [
           \ [',\s*',
-          \  '\%(\h\k*,\s*\)*\h\k*',
           \  '\cnamelist\s\+/\h\k*/\s\+\zs\%(\h\k*,\s*\)*\h\k*'
           \ ]
 <
