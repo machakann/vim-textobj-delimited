@@ -1,5 +1,5 @@
 " Vim global plugin to define text-object for delimited words
-" Last Change: 18-May-2014.
+" Last Change: 22-May-2014.
 " Maintainer : Masaaki Nakamura <mckn@outlook.com>
 
 " License    : NYSL
@@ -20,9 +20,9 @@ call textobj#user#plugin('delimited', {
       \   },
       \   'backward': {
       \     'select-a-function': 'textobj#delimited#A',
-      \     'select-a': '',
+      \     'select-a': 'aD',
       \     'select-i-function': 'textobj#delimited#I',
-      \     'select-i': '',
+      \     'select-i': 'iD',
       \   },
       \ })
 

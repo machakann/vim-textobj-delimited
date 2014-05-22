@@ -1,4 +1,4 @@
-*textobj-delimited.txt*                               Last change:18-May-2014.
+*textobj-delimited.txt*                               Last change:22-May-2014.
 
 The textobject plugin to do well with each delimited parts of string.
 
@@ -137,8 +137,8 @@ direction       keymappings                             default keymappings
 forward         <Plug>(textobj-delimited-forward-i)     id
                 <Plug>(textobj-delimited-forward-a)     ad
 
-backward        <Plug>(textobj-delimited-backward-i)
-                <Plug>(textobj-delimited-backward-a)
+backward        <Plug>(textobj-delimited-backward-i)    iD
+                <Plug>(textobj-delimited-backward-a)    aD
 --------------------------------------------------------------------------
 
 If you do not need default keymappings, define a variable named
@@ -199,10 +199,10 @@ g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
 
 >
         let g:textobj_delimited_patterns = [
+          \ ['-'         , '\<\%(-\k\+\|\k\+-\)\%(\k*-\?\)*\>'],
+          \ ['#'         , '\<\%(#\k\+\|\k\+#\)\%(\k*#\?\)*\>'],
           \ ['_'         , '\<\%(_\k\+\|\k\+_\)\%(\k*_\?\)*\>'],
           \ ['\C\ze[A-Z]', '\C\<[A-Z]\?\k\+[A-Z]\%(\k*[A-Z]\?\)*\>'],
-          \ ['#'         , '\<\%(#\k\+\|\k\+#\)\%(\k*#\?\)*\>'],
-          \ ['-'         , '\<\%(-\k\+\|\k\+-\)\%(\k*-\?\)*\>'],
           \ ]
 <
 
@@ -224,10 +224,10 @@ g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
         priority of "b:", "w:", "t:", "g:".
 >
         let b:textobj_delimited_patterns = [
+          \ ['-'         , '\<\%(-\k\+\|\k\+-\)\%(\k*-\?\)*\>'],
+          \ ['#'         , '\<\%(#\k\+\|\k\+#\)\%(\k*#\?\)*\>'],
           \ ['_'         , '\<\%(_\k\+\|\k\+_\)\%(\k*_\?\)*\>'],
           \ ['\C\ze[A-Z]', '\C\<[A-Z]\?\k\+[A-Z]\%(\k*[A-Z]\?\)*\>'],
-          \ ['#'         , '\<\%(#\k\+\|\k\+#\)\%(\k*#\?\)*\>'],
-          \ ['-'         , '\<\%(-\k\+\|\k\+-\)\%(\k*-\?\)*\>'],
           \ ]
 <
 
