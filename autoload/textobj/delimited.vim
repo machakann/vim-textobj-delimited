@@ -60,9 +60,7 @@ set cpo&vim
 
 " default pattern
 let s:textobj_delimited_patterns = [
-      \ ['-', '\<\%(-\k\+\|\k\+-\)\%(\k*-\?\)*\>'],
-      \ ['#', '\<\%(#\k\+\|\k\+#\)\%(\k*#\?\)*\>'],
-      \ ['_', '\<\%(_\k\+\|\k\+_\)\%(\k*_\?\)*\>'],
+      \ ['[#_-]', '\<\%([#_-]\k\+\|\k\+[#_-]\)\%(\k*[#_-]\?\)*\>'],
       \ ['\C\ze[A-Z]', '\C\<[A-Z]\?\k\+[A-Z]\%(\k*[A-Z]\?\)*\>'],
       \ ]
 
@@ -193,7 +191,61 @@ function! s:search_destination(kind, orig_pos, count, target, get_the_part_under
   let n     = 0
   let start = -1
   let end   = -1
-  if a:get_the_part_under_the_cursor
+  if a:getd_the_part_under_the_cursor
+    for part in split_parts
+      if (a:orig_pos[1] <= a:target[2] + part[2])
+        if a:kind ==? 'i'
+          let start = part[1]
+          let end   = part[2]
+        elseif a:kind ==? 'a'
+          let start = part[0]
+          let end   = part[3]
+        endif
+
+        break
+      endif
+    endfor
+  else
+    let idx   = (len(split_parts) < a:count) ? (len(split_parts) - 1) : (a:count - 1)
+
+    if a:kind ==? 'i'
+      let start = split_parts[idx][1]
+      let end   = split_parts[idx][2]
+    elseif a:kind ==? 'a'
+      let start = split_parts[idx][0]
+      let end   = split_parts[idx][3]
+    endif
+  endif
+
+  let start_pos = [0, a:orig_pos[0], a:target[2] + start, 0]
+  let end_pos   = [0, a:orig_pos[0], a:target[2] + end  , 0]
+
+  return [start_pos, end_pos]
+endfunction
+"}}}
+function! s:search_destination_increment_selection(kind, orig_pos, count, target, get_the_part_under_the_cursor) "{{{
+  let split_parts = s:parse(a:target[1], a:target[0])
+
+  let selection_head = [line("'<"), col("'<")]
+  let selection_tail = [line("'>"), col("'>")]
+
+  let n     = 0
+  if selection_tail == a:orig_pos
+    if a:kind ==# 'i'
+      <`2`>
+    else
+      <`3`>
+    endif
+    " increment selection area by <Plug>(textobj-delimited-forward-*)
+    " decrement selection area by <Plug>(textobj-delimited-backward-*)
+  else
+    " increment selection area by <Plug>(textobj-delimited-backward-*)
+    " decrement selection area by <Plug>(textobj-delimited-forward-*)
+  endif
+
+  let start = -1
+  let end   = -1
+  if a:getd_the_part_under_the_cursor
     for part in split_parts
       if (a:orig_pos[1] <= a:target[2] + part[2])
         if a:kind ==? 'i'
