@@ -166,20 +166,20 @@ endfunction
 function! s:user_conf(name, default)    "{{{
   let user_conf = a:default
 
-  if exists('g:textobj_functioncall_' . a:name)
-    let user_conf = g:textobj_functioncall_{a:name}
+  if exists('g:textobj_delimited_' . a:name)
+    let user_conf = g:textobj_delimited_{a:name}
   endif
 
-  if exists('t:textobj_functioncall_' . a:name)
-    let user_conf = t:textobj_functioncall_{a:name}
+  if exists('t:textobj_delimited_' . a:name)
+    let user_conf = t:textobj_delimited_{a:name}
   endif
 
-  if exists('w:textobj_functioncall_' . a:name)
-    let user_conf = w:textobj_functioncall_{a:name}
+  if exists('w:textobj_delimited_' . a:name)
+    let user_conf = w:textobj_delimited_{a:name}
   endif
 
-  if exists('b:textobj_functioncall_' . a:name)
-    let user_conf = b:textobj_functioncall_{a:name}
+  if exists('b:textobj_delimited_' . a:name)
+    let user_conf = b:textobj_delimited_{a:name}
   endif
 
   return user_conf
