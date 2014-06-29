@@ -86,7 +86,7 @@ function! s:prototype(kind) "{{{
   let string   = getline(orig_pos[0])
 
   " user configuration
-  let patterns = s:user_conf('textobj_delimited_patterns', s:textobj_delimited_patterns)
+  let patterns = s:user_conf('patterns', s:textobj_delimited_patterns)
 
   let candidates = []
   " search for the head and tail of a delimited word
