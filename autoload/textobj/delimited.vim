@@ -64,32 +64,30 @@ let s:textobj_delimited_patterns = [
       \ ['\C\ze[A-Z]', '\C\<[A-Z]\?\k\+[A-Z]\%(\k*[A-Z]\?\)*\>'],
       \ ]
 
-function! textobj#delimited#i()
-  return s:prototype('i')
+function! textobj#delimited#i(mode)
+  return s:prototype('i', a:mode)
 endfunction
 
-function! textobj#delimited#a()
-  return s:prototype('a')
+function! textobj#delimited#a(mode)
+  return s:prototype('a', a:mode)
 endfunction
 
-function! textobj#delimited#I()
-  return s:prototype('I')
+function! textobj#delimited#I(mode)
+  return s:prototype('I', a:mode)
 endfunction
 
-function! textobj#delimited#A()
-  return s:prototype('A')
+function! textobj#delimited#A(mode)
+  return s:prototype('A', a:mode)
 endfunction
 
-function! s:prototype(kind) "{{{
+function! s:prototype(kind, mode) "{{{
   let l:count  = v:count1
   let orig_pos = [line('.'), col('.')]
   let string   = getline(orig_pos[0])
+  let mode     = (a:mode ==# 'o') ? 'o' : visualmode()
 
   " user configuration
-  let opt_patterns = s:user_conf('textobj_delimited_patterns', [])
-
-  " choose patterns
-  let patterns = (opt_patterns != []) ? opt_patterns : s:textobj_delimited_patterns
+  let patterns = s:user_conf('textobj_delimited_patterns', s:textobj_delimited_patterns)
 
   let candidates = []
   " search for the head and tail of a delimited word
@@ -131,8 +129,14 @@ function! s:prototype(kind) "{{{
     call cursor(orig_pos)
   endfor
 
-  " if any candidate could not be found, then quit.
-  if candidates == [] | return 0 | endif
+  " if any candidate could not be found, then quit immediately.
+  if candidates == []
+    if a:mode ==? 'v' || a:mode == "\<C-v>"
+      normal! gv
+    endif
+
+    return
+  endif
 
   " check whether the cursor is on a delimited word.
   let filtered = filter(copy(candidates), '(v:val[2] <= orig_pos[1]) && (v:val[3] >= orig_pos[1])')
@@ -155,12 +159,23 @@ function! s:prototype(kind) "{{{
   endif
 
   if (filtered != []) && (v:count == 0)
-    let [start_pos, end_pos] = s:search_destination(a:kind, orig_pos, l:count, target, 1)
+    let [start_pos, end_pos] = s:search_destination(a:kind, orig_pos, mode, l:count, target, 1)
   else
-    let [start_pos, end_pos] = s:search_destination(a:kind, orig_pos, l:count, target, 0)
+    let [start_pos, end_pos] = s:search_destination(a:kind, orig_pos, mode, l:count, target, 0)
   endif
 
-  return ['v', start_pos, end_pos]
+  " select textobject
+  call cursor(start_pos)
+
+  if mode == "\<C-v>"
+    execute "normal! \<C-v>"
+  else
+    normal! v
+  endif
+
+  call cursor(end_pos)
+
+  return
 endfunction
 "}}}
 function! s:user_conf(name, default)    "{{{
@@ -185,13 +200,12 @@ function! s:user_conf(name, default)    "{{{
   return user_conf
 endfunction
 "}}}
-function! s:search_destination(kind, orig_pos, count, target, get_the_part_under_the_cursor) "{{{
+function! s:search_destination(kind, orig_pos, mode, count, target, get_the_part_under_the_cursor) "{{{
   let split_parts = s:parse(a:target[1], a:target[0])
 
-  let n     = 0
   let start = -1
   let end   = -1
-  if a:getd_the_part_under_the_cursor
+  if a:get_the_part_under_the_cursor
     for part in split_parts
       if (a:orig_pos[1] <= a:target[2] + part[2])
         if a:kind ==? 'i'
@@ -217,62 +231,67 @@ function! s:search_destination(kind, orig_pos, count, target, get_the_part_under
     endif
   endif
 
-  let start_pos = [0, a:orig_pos[0], a:target[2] + start, 0]
-  let end_pos   = [0, a:orig_pos[0], a:target[2] + end  , 0]
+  " increment selection area
+  if (a:mode ==# 'v' || a:mode ==# "\<C-v>")
+    \ && (a:orig_pos[0] == line("'<"))
+    \ && (a:orig_pos[0] == line("'>"))
 
-  return [start_pos, end_pos]
-endfunction
-"}}}
-function! s:search_destination_increment_selection(kind, orig_pos, count, target, get_the_part_under_the_cursor) "{{{
-  let split_parts = s:parse(a:target[1], a:target[0])
+    let i = 0
+    let col_start   = col("'<")
+    let col_end     = col("'>")
+    let match_start = 0
+    let match_end   = 0
+    for _ in split_parts
+      if !match_start && ((a:target[2] + _[0] == col_start) || (a:target[2] + _[1] == col_start))
+        let match_start = 1
 
-  let selection_head = [line("'<"), col("'<")]
-  let selection_tail = [line("'>"), col("'>")]
-
-  let n     = 0
-  if selection_tail == a:orig_pos
-    if a:kind ==# 'i'
-      <`2`>
-    else
-      <`3`>
-    endif
-    " increment selection area by <Plug>(textobj-delimited-forward-*)
-    " decrement selection area by <Plug>(textobj-delimited-backward-*)
-  else
-    " increment selection area by <Plug>(textobj-delimited-backward-*)
-    " decrement selection area by <Plug>(textobj-delimited-forward-*)
-  endif
-
-  let start = -1
-  let end   = -1
-  if a:getd_the_part_under_the_cursor
-    for part in split_parts
-      if (a:orig_pos[1] <= a:target[2] + part[2])
-        if a:kind ==? 'i'
-          let start = part[1]
-          let end   = part[2]
-        elseif a:kind ==? 'a'
-          let start = part[0]
-          let end   = part[3]
+        if a:kind =~# '[AI]'
+          let idx = i
+        elseif a:kind =~# '[ai]'
+          let start = col_start - a:target[2]
         endif
+      end
 
+      if !match_end && ((a:target[2] + _[2] == col_end) || (a:target[2] + _[3] == col_end))
+        let match_end = 1
+
+        if a:kind =~# '[ai]'
+          let idx = i
+        elseif a:kind =~# '[AI]'
+          let end = col_end - a:target[2]
+        endif
+      end
+
+      if match_start && match_end
         break
       endif
-    endfor
-  else
-    let idx   = (len(split_parts) < a:count) ? (len(split_parts) - 1) : (a:count - 1)
 
-    if a:kind ==? 'i'
-      let start = split_parts[idx][1]
-      let end   = split_parts[idx][2]
-    elseif a:kind ==? 'a'
-      let start = split_parts[idx][0]
-      let end   = split_parts[idx][3]
+      let i += 1
+    endfor
+
+    if match_start && match_end
+      if a:kind ==# 'i'
+        let n_max = len(split_parts) - idx - 1
+        let n     = (n_max < a:count) ? n_max : a:count
+        let end   = split_parts[idx + n][2]
+      elseif a:kind ==# 'a'
+        let n_max = len(split_parts) - idx - 1
+        let n     = (n_max < a:count) ? n_max : a:count
+        let end   = split_parts[idx + n][3]
+      elseif a:kind ==# 'I'
+        let n_max = idx
+        let n     = (n_max < a:count) ? n_max : a:count
+        let start = split_parts[idx - n][1]
+      elseif a:kind ==# 'A'
+        let n_max = idx
+        let n     = (n_max < a:count) ? n_max : a:count
+        let start = split_parts[idx - n][0]
+      endif
     endif
   endif
 
-  let start_pos = [0, a:orig_pos[0], a:target[2] + start, 0]
-  let end_pos   = [0, a:orig_pos[0], a:target[2] + end  , 0]
+  let start_pos = [a:orig_pos[0], a:target[2] + start]
+  let end_pos   = [a:orig_pos[0], a:target[2] +  end ]
 
   return [start_pos, end_pos]
 endfunction
