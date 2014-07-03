@@ -237,39 +237,44 @@ function! s:search_destination(kind, orig_pos, mode, count, target, get_the_part
     \ && (a:orig_pos[0] == line("'>"))
 
     let i = 0
-    let col_start   = col("'<")
-    let col_end     = col("'>")
-    let match_start = 0
-    let match_end   = 0
+    let _start         = start
+    let _end           = end
+    let select_start   = col("'<")
+    let select_end     = col("'>")
+    let is_match_start = 0
+    let is_match_end   = 0
     for _ in split_parts
-      if !match_start && ((a:target[2] + _[0] == col_start) || (a:target[2] + _[1] == col_start))
-        let match_start = 1
+      if !is_match_start && ((a:target[2] + _[0] == select_start) || (a:target[2] + _[1] == select_start))
+        let is_match_start = 1
 
         if a:kind =~# '[AI]'
           let idx = i
         elseif a:kind =~# '[ai]'
-          let start = col_start - a:target[2]
+          let _start = select_start - a:target[2]
         endif
       end
 
-      if !match_end && ((a:target[2] + _[2] == col_end) || (a:target[2] + _[3] == col_end))
-        let match_end = 1
+      if !is_match_end && ((a:target[2] + _[2] == select_end) || (a:target[2] + _[3] == select_end))
+        let is_match_end = 1
 
         if a:kind =~# '[ai]'
           let idx = i
         elseif a:kind =~# '[AI]'
-          let end = col_end - a:target[2]
+          let _end = select_end - a:target[2]
         endif
       end
 
-      if match_start && match_end
+      if is_match_start && is_match_end
+        let start = _start
+        let end   = _end
+
         break
       endif
 
       let i += 1
     endfor
 
-    if match_start && match_end
+    if is_match_start && is_match_end
       if a:kind ==# 'i'
         let n_max = len(split_parts) - idx - 1
         let n     = (n_max < a:count) ? n_max : a:count
