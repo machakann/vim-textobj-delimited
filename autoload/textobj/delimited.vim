@@ -131,7 +131,7 @@ function! s:prototype(kind, mode) "{{{
 
   " if any candidate could not be found, then quit immediately.
   if candidates == []
-    if a:mode ==? 'v' || a:mode == "\<C-v>"
+    if a:mode == 'v'
       normal! gv
     endif
 
