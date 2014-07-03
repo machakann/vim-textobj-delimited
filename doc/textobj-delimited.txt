@@ -1,11 +1,7 @@
-*textobj-delimited.txt*                               Last change:26-Jun-2014.
+*textobj-delimited.txt*                               Last change:03-Jul-2014.
 
 The textobject plugin to do well with each delimited parts of string.
 
-
-Requirements:
-- textobj-user <http://www.vim.org/scripts/script.php?script_id=2100>
-               <https://github.com/kana/vim-textobj-user>
 
 Author  : machakann <mckn@outlook.com>
 License : NYSL license
@@ -51,9 +47,9 @@ Or, if you use |d||<Plug>(textobj-delimited-forward-a)|, you will see
                #            : cursor
         let abc_ghi = 0
 <
-These keymappings respond to the words delimited by _, #, capital characters
-and - in default. You can define your rule by |g:textobj_delimited_patterns|.
-Check |textobj-delimited-configuration|.
+These keymappings respond to the words delimited by _, #, - and capital
+characters in default. You can define your rule by
+|g:textobj_delimited_patterns|. Check |textobj-delimited-configuration|.
 
 
 
@@ -120,8 +116,31 @@ You do not need to move your cursor to the word.
 |<Plug>(textobj-delimited-forward-a)| searches a delimited word to the end of
 the file inside the line.
 |<Plug>(textobj-delimited-backward-i)| and
-|<Plug>(textobj-delimited-backward-i)| searches a delimited word to the
+|<Plug>(textobj-delimited-backward-a)| searches a delimited word to the
 beginning of the file inside the line.
+
+
+
+------------------------------------------------------------------------------
+When delimited parts are being selected in visual mode, this textobject behave
+differently from usual, expanding selection area like |v||iw||iw||iw|....
+Assume the situation as following:
+>
+	       |<-->|        : selected area
+	abcdef_ghijkl_mnopqr
+<
+
+If you use |<Plug>(textobj-delimited-forward-i)|, then you will get:
+>
+	|<--------->|        : selected area
+	abcdef_ghijkl_mnopqr
+<
+
+If you use |<Plug>(textobj-delimited-backward-i)|, then you will get:
+>
+	       |<--------->| : selected area
+	abcdef_ghijkl_mnopqr
+<
 
 
 

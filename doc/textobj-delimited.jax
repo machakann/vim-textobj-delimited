@@ -1,11 +1,7 @@
-*textobj-delimited.jax*  日本語版ヘルプ               Last change:26-Jun-2014.
+*textobj-delimited.jax*  日本語版ヘルプ               Last change:03-Jul-2014.
 
 区切られた文字列の一部分をうまいことするためのテキストオブジェクトです。
 
-
-必要なもの:
-- textobj-user <http://www.vim.org/scripts/script.php?script_id=2100>
-               <https://github.com/kana/vim-textobj-user>
 
 書いた人   : machakann <mckn@outlook.com>
 ライセンス : NYSL license
@@ -123,8 +119,31 @@ INTRODUCTION                                  *textobj-delimited-introduction*
 |<Plug>(textobj-delimited-forward-a)| は対象とする文字列を行の中から右方向へ検
 索します。
 |<Plug>(textobj-delimited-backward-i)| と
-|<Plug>(textobj-delimited-backward-i)| は対象とする文字列を行の中から左方向へ
+|<Plug>(textobj-delimited-backward-a)| は対象とする文字列を行の中から左方向へ
 検索します。
+
+
+
+------------------------------------------------------------------------------
+ビジュアルモードですでに区切られた部分を選択している場合には、通常と違う動作を
+します。これは、|v||iw||iw||iw|.... のように選択領域を拡張するような動作となり
+ます。次のような場合を考えてみましょう。
+>
+	       |<-->|        : 選択領域
+	abcdef_ghijkl_mnopqr
+<
+
+|<Plug>(textobj-delimited-forward-i)| を使った場合:
+>
+	|<--------->|        : 選択領域
+	abcdef_ghijkl_mnopqr
+<
+
+|<Plug>(textobj-delimited-backward-i)| を使った場合:
+>
+	       |<--------->| : 選択領域
+	abcdef_ghijkl_mnopqr
+<
 
 
 
