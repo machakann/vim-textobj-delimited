@@ -1,11 +1,7 @@
-*textobj-delimited.jax*  日本語版ヘルプ               Last change:29-Jun-2014.
+*textobj-delimited.jax*  日本語版ヘルプ               Last change:03-Jul-2014.
 
 区切られた文字列の一部分をうまいことするためのテキストオブジェクトです。
 
-
-必要なもの:
-- textobj-user <http://www.vim.org/scripts/script.php?script_id=2100>
-               <https://github.com/kana/vim-textobj-user>
 
 書いた人   : machakann <mckn@outlook.com>
 ライセンス : NYSL license

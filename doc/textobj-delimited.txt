@@ -1,11 +1,7 @@
-*textobj-delimited.txt*                               Last change:29-Jun-2014.
+*textobj-delimited.txt*                               Last change:03-Jul-2014.
 
 The textobject plugin to do well with each delimited parts of string.
 
-
-Requirements:
-- textobj-user <http://www.vim.org/scripts/script.php?script_id=2100>
-               <https://github.com/kana/vim-textobj-user>
 
 Author  : machakann <mckn@outlook.com>
 License : NYSL license
