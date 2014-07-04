@@ -58,3 +58,30 @@ This textobject provides the keymappings to select a part of a delimited string.
  'foo_bar_baz'   ->   'foo_bar'
 ------------------------------------------------
 ```
+
+---
+
+When delimited parts are being selected in visual mode, this textobject behave differently from usual, expanding selection area like viwiwiw...
+Assume the situation as following:
+
+```
+       |<-->|        : selected area
+abcdef_ghijkl_mnopqr
+```
+
+
+If you use `id`, then you will get:
+
+```
+|<--------->|        : selected area
+abcdef_ghijkl_mnopqr
+```
+
+
+If you use `iD`, then you will get:
+
+```
+       |<--------->| : selected area
+abcdef_ghijkl_mnopqr
+```
+
