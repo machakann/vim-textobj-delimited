@@ -1,4 +1,4 @@
-*textobj-delimited.txt*                               Last change:04-Jul-2014.
+*textobj-delimited.txt*                               Last change:05-Jul-2014.
 
 The textobject plugin to do well with each delimited part of a string.
 
@@ -122,7 +122,7 @@ beginning of the file inside the line.
 
 
 ------------------------------------------------------------------------------
-When delimited parts are being selected in visual mode, this textobject behave
+When delimited parts has been selected in visual mode, this textobject behave
 differently from usual, expanding selection area like |v||iw||iw||iw|....
 Assume the situation as following:
 >
