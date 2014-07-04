@@ -1,6 +1,6 @@
-*textobj-delimited.txt*                               Last change:03-Jul-2014.
+*textobj-delimited.txt*                               Last change:04-Jul-2014.
 
-The textobject plugin to do well with each delimited parts of string.
+The textobject plugin to do well with each delimited part of a string.
 
 
 Author  : machakann <mckn@outlook.com>

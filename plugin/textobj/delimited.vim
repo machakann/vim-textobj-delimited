@@ -1,5 +1,5 @@
 " Vim global plugin to define text-object for delimited words
-" Last Change: 29-Jun-2014.
+" Last Change: 04-Jul-2014.
 " Maintainer : Masaaki Nakamura <mckn@outlook.com>
 
 " License    : NYSL
