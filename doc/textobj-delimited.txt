@@ -1,4 +1,4 @@
-*textobj-delimited.txt*                               Last change:05-Jul-2014.
+*textobj-delimited.txt*                               Last change:11-Jul-2014.
 
 The textobject plugin to do well with each delimited part of a string.
 
@@ -132,13 +132,13 @@ Assume the situation as following:
 
 If you use |<Plug>(textobj-delimited-forward-i)|, then you will get:
 >
-	|<--------->|        : selected area
+	       |<--------->| : selected area
 	abcdef_ghijkl_mnopqr
 <
 
 If you use |<Plug>(textobj-delimited-backward-i)|, then you will get:
 >
-	       |<--------->| : selected area
+	|<--------->|        : selected area
 	abcdef_ghijkl_mnopqr
 <
 

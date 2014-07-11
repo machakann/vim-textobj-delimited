@@ -73,7 +73,7 @@ abcdef_ghijkl_mnopqr
 If you use `id`, then you will get:
 
 ```
-|<--------->|        : selected area
+       |<--------->| : selected area
 abcdef_ghijkl_mnopqr
 ```
 
@@ -81,7 +81,7 @@ abcdef_ghijkl_mnopqr
 If you use `iD`, then you will get:
 
 ```
-       |<--------->| : selected area
+|<--------->|        : selected area
 abcdef_ghijkl_mnopqr
 ```
 

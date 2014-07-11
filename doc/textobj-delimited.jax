@@ -1,4 +1,4 @@
-*textobj-delimited.jax*  日本語版ヘルプ               Last change:03-Jul-2014.
+*textobj-delimited.jax*  日本語版ヘルプ               Last change:11-Jul-2014.
 
 区切られた文字列の一部分をうまいことするためのテキストオブジェクトです。
 
@@ -135,13 +135,13 @@ INTRODUCTION                                  *textobj-delimited-introduction*
 
 |<Plug>(textobj-delimited-forward-i)| を使った場合:
 >
-	|<--------->|        : 選択領域
+	       |<--------->| : 選択領域
 	abcdef_ghijkl_mnopqr
 <
 
 |<Plug>(textobj-delimited-backward-i)| を使った場合:
 >
-	       |<--------->| : 選択領域
+	|<--------->|        : 選択領域
 	abcdef_ghijkl_mnopqr
 <
 
