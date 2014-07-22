@@ -175,6 +175,11 @@ function! s:prototype(kind, mode) "{{{
 
   call cursor(end_pos)
 
+  " counter measure for the 'selection' option being 'exclusive'
+  if &selection == 'exclusive'
+    normal! l
+  endif
+
   return
 endfunction
 "}}}
@@ -243,6 +248,12 @@ function! s:search_destination(kind, orig_pos, mode, count, target, get_the_part
     let select_end     = col("'>")
     let is_match_start = 0
     let is_match_end   = 0
+
+    " counter measure for the 'selection' option being 'exclusive'
+    if &selection == 'exclusive'
+      let select_end -= 1
+    endif
+
     for _ in split_parts
       if !is_match_start && ((a:target[2] + _[0] == select_start) || (a:target[2] + _[1] == select_start))
         let is_match_start = 1
