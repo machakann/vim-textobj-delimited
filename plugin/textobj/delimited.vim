@@ -9,7 +9,7 @@
 if exists("g:loaded_textobj_delimited")
   finish
 endif
-let g:loaded_delimited = 1
+let g:loaded_textobj_delimited = 1
 
 onoremap <silent> <Plug>(textobj-delimited-forward-i)  :<C-u>call textobj#delimited#i('o')<CR>
 xnoremap <silent> <Plug>(textobj-delimited-forward-i)  :<C-u>call textobj#delimited#i('v')<CR>
