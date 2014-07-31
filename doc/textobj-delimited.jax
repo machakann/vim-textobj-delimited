@@ -1,4 +1,4 @@
-*textobj-delimited.jax*  日本語版ヘルプ               Last change:11-Jul-2014.
+*textobj-delimited.jax*  日本語版ヘルプ               Last change:29-Jul-2014.
 
 区切られた文字列の一部分をうまいことするためのテキストオブジェクトです。
 
@@ -57,24 +57,22 @@ INTRODUCTION                                  *textobj-delimited-introduction*
 
 
 ------------------------------------------------------------------------------
-単語の先頭と末尾において |<Plug>(textobj-delimited-forward-a)| は少しだけ特殊
-な挙動を示します。次の例を見てみてください。
+単語の先頭において |<Plug>(textobj-delimited-forward-a)| と
+|<Plug>(textobj-delimited-backward-a)| は少しだけ特殊な挙動を示します。次の例
+を見てみてください。
 
-単語の先頭~
- |d||<Plug>(textobj-delimited-forward-a)| を使うと '_abc' のかわりに '_abc_'
-を消去します。
+ |d||<Plug>(textobj-delimited-forward-a)| を使った結果が、 '_abc_def_ghi_' と
+ 'abc_def_ghi' の場合で異なります。
 >
          #                     #        : カーソル
-        _abc_def_ghi_    ->    def_ghi_
-<
+        _abc_def_ghi_    ->    _def_ghi_           ('_abc'がカットされている)
 
-単語の末尾~
- |d||<Plug>(textobj-delimited-forward-a)| を使うと '_ghi' のかわりに '_ghi_'
-を消去します。
->
-                 #                    # : カーソル
-        _abc_def_ghi_    ->    _abc_def
+        #                      #        : カーソル
+        abc_def_ghi      ->    def_ghi             ('abc_'がカットされている)
 <
+これは単語が区切り文字で始まっている場合は終端に区切り文字を残し、そうでない場
+合はこれを残さないためです。 |<Plug>(textobj-delimited-forward-a)| は終端の区
+切り文字の在/不在を保存します。
 
 
 

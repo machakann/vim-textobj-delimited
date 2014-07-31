@@ -85,3 +85,17 @@ If you use `iD`, then you will get:
 abcdef_ghijkl_mnopqr
 ```
 
+---
+
+At the beginning of a word, `ad` and `aD` work tricky. Look the following examples.
+
+If you use `dad`, the cut strings are different for '\_abc\_def\_ghi\_' and 'abc\_def\_ghi'.
+```
+         #                     #        : cursor
+        _abc_def_ghi_    ->    _def_ghi_         (cut '_abc')
+
+        #                      #        : cursor
+        abc_def_ghi      ->    def_ghi           (cut 'abc_')
+```
+Thus, if a word has ended delimiters like '\_abc\_def\_ghi\_', ended delimiters would be preserved. If a word has no ended delimiters like 'abc\_def\_ghi', ended delimiters would not appear. `dad` keeps the exsistence/nonexistence of ended delimiters.
+
