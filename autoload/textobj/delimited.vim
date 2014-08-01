@@ -224,6 +224,20 @@ function! s:search_destination(kind, orig_pos, mode, count, target, get_the_part
         break
       endif
     endfor
+
+    if (start == -1) && (end == -1)
+      " cursor is on the ended delimiter
+      "    # here
+      " abc_
+
+      if a:kind ==? 'i'
+        let start = part[1]
+        let end   = part[2]
+      elseif a:kind ==? 'a'
+        let start = part[0]
+        let end   = part[3]
+      endif
+    endif
   else
     let idx   = (len(split_parts) < a:count) ? (len(split_parts) - 1) : (a:count - 1)
 
