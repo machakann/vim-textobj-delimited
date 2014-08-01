@@ -139,7 +139,8 @@ function! s:prototype(kind, mode) "{{{
   endif
 
   " check whether the cursor is on a delimited word.
-  let filtered = filter(copy(candidates), '(v:val[2] <= orig_pos[1]) && (v:val[3] >= orig_pos[1])')
+  let filtered = filter(copy(candidates),
+        \          '(v:val[2] <= orig_pos[1]) && (v:val[3] >= orig_pos[1])')
 
   if filtered == []
     " if the cursor is not on the word, then searching forward inside the line
@@ -159,9 +160,11 @@ function! s:prototype(kind, mode) "{{{
   endif
 
   if (filtered != []) && (v:count == 0)
-    let [start_pos, end_pos] = s:search_destination(a:kind, orig_pos, mode, l:count, target, 1)
+    let [start_pos, end_pos] = s:search_destination(a:kind, orig_pos, mode,
+          \                                               l:count, target, 1)
   else
-    let [start_pos, end_pos] = s:search_destination(a:kind, orig_pos, mode, l:count, target, 0)
+    let [start_pos, end_pos] = s:search_destination(a:kind, orig_pos, mode,
+          \                                               l:count, target, 0)
   endif
 
   " select textobject
@@ -239,7 +242,9 @@ function! s:search_destination(kind, orig_pos, mode, count, target, get_the_part
       endif
     endif
   else
-    let idx   = (len(split_parts) < a:count) ? (len(split_parts) - 1) : (a:count - 1)
+    let idx   = (len(split_parts) < a:count)
+          \   ? (len(split_parts) - 1)
+          \   : (a:count - 1)
 
     if a:kind ==? 'i'
       let start = split_parts[idx][1]
@@ -366,7 +371,7 @@ endfunction
 "}}}
 function! s:parse(string, delimiter)  "{{{
   let head = -1
-  let tail = 0
+  let tail =  0
 
   let pos = []
   while 1
