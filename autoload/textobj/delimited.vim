@@ -224,20 +224,6 @@ function! s:search_destination(kind, orig_pos, mode, count, target, get_the_part
         break
       endif
     endfor
-
-    if (start == -1) && (end == -1)
-      " cursor is on the ended delimiter
-      "    # here
-      " abc_
-
-      if a:kind ==? 'i'
-        let start = part[1]
-        let end   = part[2]
-      elseif a:kind ==? 'a'
-        let start = part[0]
-        let end   = part[3]
-      endif
-    endif
   else
     let idx   = (len(split_parts) < a:count) ? (len(split_parts) - 1) : (a:count - 1)
 
@@ -279,7 +265,7 @@ function! s:search_destination(kind, orig_pos, mode, count, target, get_the_part
         endif
       end
 
-      if !is_match_end && is_match_start && ((a:target[2] + _[2] == select_end) || (a:target[2] + _[3] == select_end))
+      if !is_match_end && ((a:target[2] + _[2] == select_end) || (a:target[2] + _[3] == select_end))
         let is_match_end = 1
 
         if a:kind =~# '[ai]'
@@ -328,7 +314,7 @@ endfunction
 "}}}
 function! s:parse(string, delimiter)  "{{{
   let head = -1
-  let tail =  0
+  let tail = 0
 
   let pos = []
   while 1
@@ -356,7 +342,7 @@ function! s:parse(string, delimiter)  "{{{
   "           head_delimiter_start,
   "           delimited_word_start,
   "           delimited_word_end,
-  "           delimited_word_end or tail_delimiter_end
+  "           tail_delimiter_end
   "         ]
 
   let i = 0
@@ -392,6 +378,38 @@ function! s:parse(string, delimiter)  "{{{
           let f[0:1] = [0, p[1]]
         endif
       endif
+    elseif i == 2
+      if n == 2
+        if p[1] != len(a:string)
+          if f[0] == 0
+            " case like: '_abc_def'
+            let f[2:3] = [p[0] - 1, p[1] - 1]
+            let parts += [copy(f)]
+            let parts += [[p[0], p[1], len(a:string) - 1, len(a:string) - 1]]
+          else
+            " case like: 'abc_def_ghi'
+            let f[2:3] = [p[0] - 1, p[0] - 1]
+            let parts += [copy(f)]
+            let parts += [[p[0], p[1], len(a:string) - 1, len(a:string) - 1]]
+          endif
+        else
+          " case like: 'abc_def_'
+          let f[2:3] = [p[0] - 1, p[1] - 1]
+          let parts += [copy(f)]
+        endif
+      else
+        if parts == []
+          " case like: '_abc_def...'
+          let f[2:3] = [p[0] - 1, p[1] - 1]
+          let parts += [copy(f)]
+        else
+          " case like: 'abc_def_ghi...'
+          let f[2:3] = [p[0] - 1, p[0] - 1]
+          let parts += [copy(f)]
+        endif
+
+        let f[0:1] = [p[0], p[1]]
+      endif
     elseif i == n
       " last delimiter
       if p[1] != len(a:string)
@@ -401,7 +419,7 @@ function! s:parse(string, delimiter)  "{{{
         let parts += [[p[0], p[1], len(a:string) - 1, len(a:string) - 1]]
       else
         " case like: '..._xyz_'
-        let f[2:3] = [p[0] - 1, p[0] - 1]
+        let f[2:3] = [p[0] - 1, p[1] - 1]
         let parts += [copy(f)]
       endif
     else
