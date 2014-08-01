@@ -1,9 +1,9 @@
-*textobj-delimited.txt*                               Last change:29-Jul-2014.
+*textobj-delimited.txt*                               Last change:01-Aug-2014.
 
 The textobject plugin to do well with each delimited part of a string.
 
 
-Author  : machakann <mckn@outlook.com>
+Author  : machakann <mckn@outlook.jp>
 License : NYSL license
           Japanese <http://www.kmonos.net/nysl/>
           English (Unofficial) <http://www.kmonos.net/nysl/index.en.html>
