@@ -279,7 +279,7 @@ function! s:search_destination(kind, orig_pos, mode, count, target, get_the_part
         endif
       end
 
-      if !is_match_end && ((a:target[2] + _[2] == select_end) || (a:target[2] + _[3] == select_end))
+      if !is_match_end && is_match_start && ((a:target[2] + _[2] == select_end) || (a:target[2] + _[3] == select_end))
         let is_match_end = 1
 
         if a:kind =~# '[ai]'
