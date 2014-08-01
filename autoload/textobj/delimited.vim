@@ -262,6 +262,7 @@ function! s:search_destination(kind, orig_pos, mode, count, target, get_the_part
     let select_end     = col("'>")
     let is_match_start = 0
     let is_match_end   = 0
+    let is_rev_order   = 0
 
     " counter measure for the 'selection' option being 'exclusive'
     if &selection == 'exclusive'
@@ -269,23 +270,60 @@ function! s:search_destination(kind, orig_pos, mode, count, target, get_the_part
     endif
 
     for _ in split_parts
-      if !is_match_start && ((a:target[2] + _[0] == select_start) || (a:target[2] + _[1] == select_start))
-        let is_match_start = 1
+      if !is_match_start
+        " NOTE: It should be checked _[1] first to update is_rev_order!
+        "       Because sometimes _[0] == _[1] is possible.
+        if a:target[2] + _[1] == select_start
+          let is_match_start = 1
 
-        if a:kind =~# '[AI]'
-          let idx = i
-        elseif a:kind =~# '[ai]'
-          let _start = select_start - a:target[2]
+          if a:kind =~# '[AI]'
+            let idx = i
+          elseif a:kind ==# 'a'
+            let _start = _[1]
+            let is_rev_order = 1
+          elseif a:kind ==# 'i'
+            let _start = _[1]
+          endif
+        elseif a:target[2] + _[0] == select_start
+          let is_match_start = 1
+
+          if a:kind =~# '[AI]'
+            let idx = i
+          elseif a:kind =~# '[ai]'
+            let _start = _[0]
+          endif
         endif
       end
 
-      if !is_match_end && is_match_start && ((a:target[2] + _[2] == select_end) || (a:target[2] + _[3] == select_end))
-        let is_match_end = 1
+      if !is_match_end && is_match_start
+        " NOTE: It should be checked _[4] first to update is_rev_order!
+        if (a:target[2] + _[4] == select_end) && (_[4] != 0)
+          let is_match_end = 1
 
-        if a:kind =~# '[ai]'
-          let idx = i
-        elseif a:kind =~# '[AI]'
-          let _end = select_end - a:target[2]
+          if a:kind =~# '[ai]'
+            let idx = i
+          elseif a:kind ==# 'A'
+            let _end = _[4]
+            let is_rev_order = 1
+          elseif a:kind ==# 'I'
+            let _end = _[4]
+          endif
+        elseif a:target[2] + _[2] == select_end
+          let is_match_end = 1
+
+          if a:kind =~# '[ai]'
+            let idx = i
+          elseif a:kind =~# '[AI]'
+            let _end = _[2]
+          endif
+        elseif a:target[2] + _[3] == select_end
+          let is_match_end = 1
+
+          if a:kind =~# '[ai]'
+            let idx = i
+          elseif a:kind =~# '[AI]'
+            let _end = _[3]
+          endif
         endif
       end
 
@@ -293,31 +331,31 @@ function! s:search_destination(kind, orig_pos, mode, count, target, get_the_part
         let start = _start
         let end   = _end
 
+        if a:kind ==# 'i'
+          let n_max = len(split_parts) - idx - 1
+          let n     = (n_max < a:count) ? n_max : a:count
+          let end   = split_parts[idx + n][2]
+        elseif a:kind ==# 'a'
+          let n_max = len(split_parts) - idx - 1
+          let n     = (n_max < a:count) ? n_max : a:count
+          let m     = is_rev_order && (split_parts[idx + n][4] != 0) ? 4 : 3
+          let end   = split_parts[idx + n][m]
+        elseif a:kind ==# 'I'
+          let n_max = idx
+          let n     = (n_max < a:count) ? n_max : a:count
+          let start = split_parts[idx - n][1]
+        elseif a:kind ==# 'A'
+          let n_max = idx
+          let n     = (n_max < a:count) ? n_max : a:count
+          let m     = is_rev_order ? 1 : 0
+          let start = split_parts[idx - n][m]
+        endif
+
         break
       endif
 
       let i += 1
     endfor
-
-    if is_match_start && is_match_end
-      if a:kind ==# 'i'
-        let n_max = len(split_parts) - idx - 1
-        let n     = (n_max < a:count) ? n_max : a:count
-        let end   = split_parts[idx + n][2]
-      elseif a:kind ==# 'a'
-        let n_max = len(split_parts) - idx - 1
-        let n     = (n_max < a:count) ? n_max : a:count
-        let end   = split_parts[idx + n][3]
-      elseif a:kind ==# 'I'
-        let n_max = idx
-        let n     = (n_max < a:count) ? n_max : a:count
-        let start = split_parts[idx - n][1]
-      elseif a:kind ==# 'A'
-        let n_max = idx
-        let n     = (n_max < a:count) ? n_max : a:count
-        let start = split_parts[idx - n][0]
-      endif
-    endif
   endif
 
   let start_pos = [a:orig_pos[0], a:target[2] + start]
@@ -353,15 +391,17 @@ function! s:parse(string, delimiter)  "{{{
   let parts = []
 
   " parts = [
-  "           head_delimiter_start,
-  "           delimited_word_start,
-  "           delimited_word_end,
+  "           head_delimiter_start (head of a textobject),
+  "           delimited_word_start (head of inner textobject),
+  "           delimited_word_end (tail of inner textobject),
+  "           delimited_word_end or tail_delimiter_end (tail of a textobject),
   "           tail_delimiter_end
   "         ]
 
   let i = 0
   let n = len(pos)
-  let f = [0, 0, 0, 0]
+  let l = len(a:string)
+  let f = [0, 0, 0, 0, 0]
   for p in pos
     let i += 1
 
@@ -369,76 +409,44 @@ function! s:parse(string, delimiter)  "{{{
       " first delimiter
       if n == 1
         " also the last
-        if p[1] != len(a:string)
+        if p[1] != l
           if p[0] != 0
             " case like: 'abc_def'
-            let parts += [[0, 0, p[0] - 1, p[1] - 1]]
-            let parts += [[p[0], p[1], len(a:string) - 1, len(a:string) - 1]]
+            let parts += [[0, 0, p[0] - 1, p[1] - 1, p[1] - 1]]
+            let parts += [[p[0], p[1], l - 1, l - 1, 0]]
           else
             " case like: '_abc'
-            let parts += [[0, p[1], len(a:string) - 1, len(a:string) - 1]]
+            let parts += [[0, p[1], l - 1, l - 1, 0]]
           endif
         else
           " case like: 'abc_'
-          let parts += [[0, 0, p[0] - 1, p[1] - 1]]
+          let parts += [[0, 0, p[0] - 1, p[1] - 1, p[1] - 1]]
         endif
       else
         if p[0] != 0
           " case like: 'abc_...'
-          let parts += [[0, 0, p[0] - 1, p[1] - 1]]
+          let parts += [[0, 0, p[0] - 1, p[1] - 1, p[1] - 1]]
           let f[0:1] = [p[0], p[1]]
         else
           " case like: '_abc_...'
           let f[0:1] = [0, p[1]]
         endif
       endif
-    elseif i == 2
-      if n == 2
-        if p[1] != len(a:string)
-          if f[0] == 0
-            " case like: '_abc_def'
-            let f[2:3] = [p[0] - 1, p[1] - 1]
-            let parts += [copy(f)]
-            let parts += [[p[0], p[1], len(a:string) - 1, len(a:string) - 1]]
-          else
-            " case like: 'abc_def_ghi'
-            let f[2:3] = [p[0] - 1, p[0] - 1]
-            let parts += [copy(f)]
-            let parts += [[p[0], p[1], len(a:string) - 1, len(a:string) - 1]]
-          endif
-        else
-          " case like: 'abc_def_'
-          let f[2:3] = [p[0] - 1, p[1] - 1]
-          let parts += [copy(f)]
-        endif
-      else
-        if parts == []
-          " case like: '_abc_def...'
-          let f[2:3] = [p[0] - 1, p[1] - 1]
-          let parts += [copy(f)]
-        else
-          " case like: 'abc_def_ghi...'
-          let f[2:3] = [p[0] - 1, p[0] - 1]
-          let parts += [copy(f)]
-        endif
-
-        let f[0:1] = [p[0], p[1]]
-      endif
     elseif i == n
       " last delimiter
-      if p[1] != len(a:string)
+      if p[1] != l
         " case like: '..._xyz'
-        let f[2:3] = [p[0] - 1, p[0] - 1]
+        let f[2:4] = [p[0] - 1, p[0] - 1, p[1] - 1]
         let parts += [copy(f)]
-        let parts += [[p[0], p[1], len(a:string) - 1, len(a:string) - 1]]
+        let parts += [[p[0], p[1], l - 1, l - 1, 0]]
       else
         " case like: '..._xyz_'
-        let f[2:3] = [p[0] - 1, p[1] - 1]
+        let f[2:4] = [p[0] - 1, p[0] - 1, p[1] - 1]
         let parts += [copy(f)]
       endif
     else
       " intermediate part like: '..._mno...'
-      let f[2:3] = [p[0] - 1, p[0] - 1]
+      let f[2:4] = [p[0] - 1, p[0] - 1, p[1] - 1]
       let parts += [copy(f)]
       let f[0:1] = [p[0], p[1]]
     endif
