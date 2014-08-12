@@ -1,4 +1,4 @@
-*textobj-delimited.jax*  日本語版ヘルプ               Last change:01-Aug-2014.
+*textobj-delimited.jax*  日本語版ヘルプ               Last change:12-Aug-2014.
 
 区切られた文字列の一部分をうまいことするためのテキストオブジェクトです。
 
@@ -204,7 +204,7 @@ CONFIGURATION                                *textobj-delimited-configuration*
                                  *g:textobj_delimited_no_default_key_mappings*
 g:textobj_delimited_no_default_key_mappings
         この変数が定義されているとデフォルトのキーマッピングは設定されません。
-        "id"、 "ad"、 "Id"、 "Ad" を他で使いたい場合などに便利でしょう。
+        "id"、 "ad"、 "iD"、 "aD" を他で使いたい場合などに便利でしょう。
 
 g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
 　　　　対象とする文字列の設定を行うことができます。この変数は二つの要素を持つ

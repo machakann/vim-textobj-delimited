@@ -1,4 +1,4 @@
-*textobj-delimited.txt*                               Last change:01-Aug-2014.
+*textobj-delimited.txt*                               Last change:12-Aug-2014.
 
 The textobject plugin to do well with each delimited part of a string.
 
@@ -204,7 +204,7 @@ CONFIGURATION                                *textobj-delimited-configuration*
                                  *g:textobj_delimited_no_default_key_mappings*
 g:textobj_delimited_no_default_key_mappings
         If you define this valiable in your vimrc, default keymappings do not
-        prepared. If you want to use "id", "ad", "Id", "Ad" for other
+        prepared. If you want to use "id", "ad", "iD", "aD" for other
         mappings, this would be helpful.
 
 g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
