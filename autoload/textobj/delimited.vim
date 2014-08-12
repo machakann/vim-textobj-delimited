@@ -1,6 +1,6 @@
 " textobj-delimited
 " text-object for treating a delimited part of a word by {count}
-" The words like, foo_bar_baz, foo#bar#baz, FooBarBaz, are expected target.
+" The words like, foo_bar_baz, foo#bar#baz, FooBarBaz, are expected targets.
 
 " The meaning of {count} is unique for this text-object, that is, different
 " from ordinary text-object.
