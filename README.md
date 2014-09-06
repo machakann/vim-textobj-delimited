@@ -61,7 +61,7 @@ This textobject provides the keymappings to select a part of a delimited string.
 
 ---
 
-When delimited parts have been selected in visual mode, this textobject behave differently from usual, expanding selection area like viwiwiw...
+When delimited parts are being selected in visual mode, this textobject behave differently from usual, expanding selection area like viwiwiw...
 Assume the situation as following:
 
 ```
