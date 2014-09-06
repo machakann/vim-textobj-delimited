@@ -4,7 +4,7 @@ textobj-delimited
 The textobject plugin to do well with each delimited parts of string.
 
 # Brief explanation
-This textobject provides the keymappings to select a part of a delimited string. `id`, `ad`, `iD`, `aD` is used in default. Please refer following examples and doc/textobj-delimited.txt.
+This textobject provides the keymappings to select a part of a delimited string. `id`, `ad`, `iD`, `aD` is used in default. Please see following examples and doc/textobj-delimited.txt.
 
 # Examples
 ```
