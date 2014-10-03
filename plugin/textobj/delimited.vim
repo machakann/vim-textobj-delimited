@@ -1,6 +1,6 @@
 " Vim global plugin to define text-object for delimited words
-" Last Change: 04-Jul-2014.
-" Maintainer : Masaaki Nakamura <mckn@outlook.com>
+" Last Change: 03-Oct-2014.
+" Maintainer : Masaaki Nakamura <mckn@outlook.jp>
 
 " License    : NYSL
 "              Japanese <http://www.kmonos.net/nysl/>
