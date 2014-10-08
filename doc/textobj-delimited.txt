@@ -1,4 +1,4 @@
-*textobj-delimited.txt*                               Last change:12-Aug-2014.
+*textobj-delimited.txt*                               Last change:08-Oct-2014.
 
 The textobject plugin to do well with each delimited part of a string.
 
@@ -210,17 +210,29 @@ g:textobj_delimited_no_default_key_mappings
 g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
         You can make your preferable settings for the recognition of delimited
         words. |g:textobj_delimited_patterns| is a list includes lists which
-        have two items. The first one is a regular expression pattern to
-        assign a delimiter, the other is a regular expression pattern to
-        assign a whole body of a delimited word. The equivalent to the default
-        pattern is like this:
+        have three items. The first one is a regular expression pattern to
+        assign a delimiter, the second one is a regular expression pattern to
+        assign a whole body of a delimited word, the last one is priority of
+        the pattern set. Higher number is prior to lower one. This priority is
+        optional, if it is omitted it is regarded as 0. If the cursor is on
+        a string which matches with several patterns, the candidate which has
+        the highest priority will chosen. If the priorities of candidates are
+        same, then the shortest candidate will be chosen. If the word length
+        also same, the candidate will be determined by the order in this list.
+        The earliest item in list will be chosen.
+        The equivalent to the default pattern is like this:
 
 >
         let g:textobj_delimited_patterns = [
+          \ ['\m/', '\m\%(/[-.[:alnum:]_~]\+\)\+', 10],
+          \ ['\m\\', '\m\a:\%(\\[^\\/?:*"<>|]\+\)\+\ze\%(''[^a-z]\|$\)', 10],
           \ ['[#_-]', '\<\%([#_-]\k\+\|\k\+[#_-]\)\%(\k*[#_-]\?\)*\>'],
           \ ['\C\ze[A-Z]', '\C\<[A-Z]\?\k\+[A-Z]\%(\k*[A-Z]\?\)*\>'],
           \ ]
 <
+        The first pattern is for unix style file path, the second one is for
+        Windows style file path, the third one is the words delimited by '#',
+        '_' and '-', the last one is for camelcase strings.
 
         If you want to make a pattern for namelist expression in FORTRAN,
 >
@@ -240,6 +252,8 @@ g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
         priority of "b:", "w:", "t:", "g:".
 >
         let b:textobj_delimited_patterns = [
+          \ ['\m/', '\m\%(/[-.[:alnum:]_~]\+\)\+', 10],
+          \ ['\m\\', '\m\a:\%(\\[^\\/?:*"<>|]\+\)\+\ze\%(''[^a-z]\|$\)', 10],
           \ ['[#_-]', '\<\%([#_-]\k\+\|\k\+[#_-]\)\%(\k*[#_-]\?\)*\>'],
           \ ['\C\ze[A-Z]', '\C\<[A-Z]\?\k\+[A-Z]\%(\k*[A-Z]\?\)*\>'],
           \ ]

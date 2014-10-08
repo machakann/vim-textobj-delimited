@@ -60,8 +60,8 @@ set cpo&vim
 
 " default pattern
 let s:textobj_delimited_patterns = [
-      \ ['\m/', '\m\%(/[-.[:alnum:]_~]\+\)\+'],
-      \ ['\m\\', '\m\a:\%(\\[^\\/?:*"<>|]\+\)\+\ze\%(''[^a-z]\|$\)'],
+      \ ['\m/', '\m\%(/[-.[:alnum:]_~]\+\)\+', 10],
+      \ ['\m\\', '\m\a:\%(\\[^\\/?:*"<>|]\+\)\+\ze\%(''[^a-z]\|$\)', 10],
       \ ['\m[#_-]', '\m\<\%([#_-]\k\+\|\k\+[#_-]\)\%(\k*[#_-]\?\)*\>'],
       \ ['\m\C\ze[A-Z]', '\m\C\<[A-Z]\?\k\+[A-Z]\%(\k*[A-Z]\?\)*\>'],
       \ ]
@@ -96,6 +96,7 @@ function! s:prototype(kind, mode) "{{{
   for pattern in patterns
     let delimiter = pattern[0]
     let delimited = pattern[1]
+    let priority  = get(pattern, 2, 0)
 
     if a:kind =~# '[ia]'
       let flag = 'ce'
@@ -124,7 +125,7 @@ function! s:prototype(kind, mode) "{{{
 
       let body = string[head[1]-1 : tail[1]-1]
 
-      let candidates += [[delimiter, body, head[1], tail[1]]]
+      let candidates += [[delimiter, body, head[1], tail[1], priority]]
       break
     endwhile
 
@@ -155,10 +156,9 @@ function! s:prototype(kind, mode) "{{{
       let target = candidates[match(heads, reverse(sort(copy(heads)))[0])]
     endif
   else
-    " if the cursor is on the word, then choose the shortest candidate.
-    let candidates = filtered
-    let lengths    = map(copy(candidates), 'v:val[3]-v:val[2]')
-    let target     = candidates[match(lengths, sort(copy(lengths))[0])]
+    " if the cursor is on the word, then choose the candidate which has
+    " highest priority and the shortest length.
+    let target = sort(filtered, 's:compare_priority')[0]
   endif
 
   if (filtered != []) && (v:count == 0)
@@ -464,6 +464,23 @@ function! s:parse(string, delimiter)  "{{{
 "   endfor
 
   return parts
+endfunction
+"}}}
+function! s:compare_priority(i1, i2) "{{{
+  if a:i1[4] > a:i2[4]
+    return -1
+  elseif a:i1[4] < a:i2[4]
+    return 1
+  else
+    let length1 = a:i1[3] - a:i1[2]
+    let length2 = a:i2[3] - a:i2[2]
+    if length1 < length2
+      return -1
+    elseif length1 > length2
+      return 1
+    endif
+  endif
+  return 0
 endfunction
 "}}}
 
