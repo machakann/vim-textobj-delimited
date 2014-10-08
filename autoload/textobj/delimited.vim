@@ -149,11 +149,9 @@ function! s:prototype(kind, mode) "{{{
     " if the cursor is not on the word, then searching forward inside the line
     " and choose the closest one.
     if a:kind =~# '[ai]'
-      let heads  = map(copy(candidates), 'v:val[2]')
-      let target = candidates[match(heads, sort(copy(heads))[0])]
+      let target = sort(candidates, 's:compare_distance')[0]
     elseif a:kind =~# '[AI]'
-      let heads  = map(copy(candidates), 'v:val[3]')
-      let target = candidates[match(heads, reverse(sort(copy(heads)))[0])]
+      let target = sort(candidates, 's:compare_DISTANCE')[0]
     endif
   else
     " if the cursor is on the word, then choose the candidate which has
@@ -481,6 +479,14 @@ function! s:compare_priority(i1, i2) "{{{
     endif
   endif
   return 0
+endfunction
+"}}}
+function! s:compare_distance(i1, i2)  "{{{
+  return a:i1[2] < a:i2[2] ? -1 : (a:i1[2] > a:i2[2] ? 1 : 0)
+endfunction
+"}}}
+function! s:compare_DISTANCE(i1, i2)  "{{{
+  return a:i1[3] < a:i2[3] ? -1 : (a:i1[3] > a:i2[3] ? 1 : 0)
 endfunction
 "}}}
 
