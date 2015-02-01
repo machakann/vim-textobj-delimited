@@ -1,4 +1,4 @@
-*textobj-delimited.jax*  日本語版ヘルプ               Last change:08-Oct-2014.
+*textobj-delimited.jax*  日本語版ヘルプ               Last change:01-Feb-2015.
 
 区切られた文字列の一部分をうまいことするためのテキストオブジェクトです。
 
@@ -238,8 +238,7 @@ g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
         次のように書けるでしょう。
 >
         let g:textobj_delimited_patterns += [
-          \ [',\s*',
-          \  '\cnamelist\s\+/\h\k*/\s\+\zs\%(\h\k*,\s*\)*\h\k*'
+          \ [',\s*', '\cnamelist\s\+/\h\k*/\s\+\zs\%(\h\k*,\s*\)*\h\k*']
           \ ]
 <
 
