@@ -1,4 +1,4 @@
-*textobj-delimited.jax*  日本語版ヘルプ               Last change:01-Feb-2015.
+*textobj-delimited.jax*  日本語版ヘルプ               Last change:05-Apr-2015.
 
 区切られた文字列の一部分をうまいことするためのテキストオブジェクトです。
 
@@ -222,7 +222,7 @@ g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
         let g:textobj_delimited_patterns = [
           \ ['\m/', '\m\%(/[-.[:alnum:]_~]\+\)\+', 10],
           \ ['\m\\', '\m\a:\%(\\[^\\/?:*"<>|]\+\)\+\ze\%(''[^a-z]\|$\)', 10],
-          \ ['[#_-]', '\<\%([#_-]\k\+\|\k\+[#_-]\)\%(\k*[#_-]\?\)*\>'],
+          \ ['[#_.-]', '\<\%([#_.-]\k\+\|\k\+[#_.-]\)\%(\k*[#_.-]\?\)*\>'],
           \ ['\C\ze[A-Z]', '\C\<[A-Z]\?\k\+[A-Z]\%(\k*[A-Z]\?\)*\>'],
           \ ]
 <
@@ -249,7 +249,7 @@ g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
         let b:textobj_delimited_patterns = [
           \ ['\m/', '\m\%(/[-.[:alnum:]_~]\+\)\+', 10],
           \ ['\m\\', '\m\a:\%(\\[^\\/?:*"<>|]\+\)\+\ze\%(''[^a-z]\|$\)', 10],
-          \ ['[#_-]', '\<\%([#_-]\k\+\|\k\+[#_-]\)\%(\k*[#_-]\?\)*\>'],
+          \ ['[#_.-]', '\<\%([#_.-]\k\+\|\k\+[#_.-]\)\%(\k*[#_.-]\?\)*\>'],
           \ ['\C\ze[A-Z]', '\C\<[A-Z]\?\k\+[A-Z]\%(\k*[A-Z]\?\)*\>'],
           \ ]
 <

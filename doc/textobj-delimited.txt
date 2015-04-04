@@ -1,4 +1,4 @@
-*textobj-delimited.txt*                               Last change:01-Feb-2015.
+*textobj-delimited.txt*                               Last change:05-Apr-2015.
 
 The textobject plugin to do well with each delimited part of a string.
 
@@ -203,8 +203,8 @@ CONFIGURATION                                *textobj-delimited-configuration*
 
                                  *g:textobj_delimited_no_default_key_mappings*
 g:textobj_delimited_no_default_key_mappings
-        If you define this valiable in your vimrc, default keymappings do not
-        prepared. If you want to use "id", "ad", "iD", "aD" for other
+        If you define this valiable in your vimrc, default keymappings would
+        not be prepared. If you want to use "id", "ad", "iD", "aD" for other
         mappings, this would be helpful.
 
 g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
@@ -226,7 +226,7 @@ g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
         let g:textobj_delimited_patterns = [
           \ ['\m/', '\m\%(/[-.[:alnum:]_~]\+\)\+', 10],
           \ ['\m\\', '\m\a:\%(\\[^\\/?:*"<>|]\+\)\+\ze\%(''[^a-z]\|$\)', 10],
-          \ ['[#_-]', '\<\%([#_-]\k\+\|\k\+[#_-]\)\%(\k*[#_-]\?\)*\>'],
+          \ ['[#_.-]', '\<\%([#_.-]\k\+\|\k\+[#_.-]\)\%(\k*[#_.-]\?\)*\>'],
           \ ['\C\ze[A-Z]', '\C\<[A-Z]\?\k\+[A-Z]\%(\k*[A-Z]\?\)*\>'],
           \ ]
 <
@@ -253,7 +253,7 @@ g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
         let b:textobj_delimited_patterns = [
           \ ['\m/', '\m\%(/[-.[:alnum:]_~]\+\)\+', 10],
           \ ['\m\\', '\m\a:\%(\\[^\\/?:*"<>|]\+\)\+\ze\%(''[^a-z]\|$\)', 10],
-          \ ['[#_-]', '\<\%([#_-]\k\+\|\k\+[#_-]\)\%(\k*[#_-]\?\)*\>'],
+          \ ['[#_.-]', '\<\%([#_.-]\k\+\|\k\+[#_.-]\)\%(\k*[#_.-]\?\)*\>'],
           \ ['\C\ze[A-Z]', '\C\<[A-Z]\?\k\+[A-Z]\%(\k*[A-Z]\?\)*\>'],
           \ ]
 <
