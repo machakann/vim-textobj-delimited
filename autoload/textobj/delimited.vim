@@ -168,14 +168,10 @@ function! s:prototype(kind, mode) "{{{
   endif
 
   " select textobject
+  let visualmode = mode == "\<C-v>" ? "\<C-v>" : 'v'
+  execute 'normal! ' . visualmode
   call cursor(start_pos)
-
-  if mode == "\<C-v>"
-    execute "normal! \<C-v>"
-  else
-    normal! v
-  endif
-
+  normal! o
   call cursor(end_pos)
 
   " counter measure for the 'selection' option being 'exclusive'
