@@ -1,4 +1,4 @@
-*textobj-delimited.jax*  日本語版ヘルプ               Last change:05-Apr-2015.
+*textobj-delimited.jax*  日本語版ヘルプ               Last change:01-Aug-2015.
 
 区切られた文字列の一部分をうまいことするためのテキストオブジェクトです。
 
@@ -230,7 +230,14 @@ g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
         スタイルのファイルパス、三つ目のパターンは '#', '_', '-' に区切られた
         文字列、最後のパターンはキャメルケースの文字列にそれぞれ対応します。
 
-        もし、FORTRAN の namelist のためのパターンを作りたければ、
+        この設定は |g:textobj#delimited#default_patterns| に収められているので
+        必要な場合はこれを複製するとよいでしょう。
+>
+        let g:textobj_delimited_patterns
+          \ = deepcopy(g:textobj#delimited#default_patterns)
+<
+
+        さらに、もし FORTRAN の namelist のためのパターンを作りたければ、
 >
         ! FORTRAN is still alive!
         namelist /parameters/ abc, def, ghi
@@ -252,6 +259,14 @@ g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
           \ ['[#_.-]', '\<\%([#_.-]\k\+\|\k\+[#_.-]\)\%(\k*[#_.-]\?\)*\>'],
           \ ['\C\ze[A-Z]', '\C\<[A-Z]\?\k\+[A-Z]\%(\k*[A-Z]\?\)*\>'],
           \ ]
+<
+
+g:textobj#delimited#default_patterns    *g:textobj#delimited#default_patterns*
+        デフォルトの設定が収められた変数です。変更はできませんが、複製をするこ
+        とでデフォルトの設定を簡単に引き継ぐことができます。
+>
+        let g:textobj_delimited_patterns
+          \ = deepcopy(g:textobj#delimited#default_patterns)
 <
 
 ==============================================================================

@@ -59,12 +59,16 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 " default pattern
-let s:textobj_delimited_patterns = [
+if exists('g:textobj#delimited#default_patterns')
+  unlockvar! g:textobj#delimited#default_patterns
+endif
+let g:textobj#delimited#default_patterns = [
       \   ['\m/', '\m\%(/[-.[:alnum:]_~]\+\)\+', 10],
       \   ['\m\\', '\m\a:\%(\\[^\\/?:*"<>|]\+\)\+\ze\%(''[^a-z]\|$\)', 10],
       \   ['\m[#_.-]', '\m\<\%([#_.-]\k\+\|\k\+[#_.-]\)\%(\k*[#_.-]\?\)*\>'],
       \   ['\m\C\ze[A-Z]', '\m\C\<[A-Z]\?\k\+[A-Z]\%(\k*[A-Z]\?\)*\>'],
       \ ]
+lockvar! g:textobj#delimited#default_patterns
 
 function! textobj#delimited#i(mode)
   return s:prototype('i', a:mode)
@@ -89,7 +93,7 @@ function! s:prototype(kind, mode) "{{{
   let mode     = (a:mode ==# 'o') ? 'o' : visualmode()
 
   " user configuration
-  let patterns = s:user_conf('patterns', s:textobj_delimited_patterns)
+  let patterns = s:user_conf('patterns', g:textobj#delimited#default_patterns)
 
   let candidates = []
   " search for the head and tail of a delimited word

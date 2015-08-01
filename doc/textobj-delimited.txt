@@ -1,4 +1,4 @@
-*textobj-delimited.txt*                               Last change:05-Apr-2015.
+*textobj-delimited.txt*                               Last change:01-Aug-2015.
 
 The textobject plugin to do well with each delimited part of a string.
 
@@ -234,6 +234,14 @@ g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
         Windows style file path, the third one is the words delimited by '#',
         '_' and '-', the last one is for camelcase strings.
 
+        If you want to copy this, you can use
+        |g:textobj#delimited#default_patterns|.
+        Then you can add other settings.
+>
+        let g:textobj_delimited_patterns
+          \ = deepcopy(g:textobj#delimited#default_patterns)
+<
+
         If you want to make a pattern for namelist expression in FORTRAN,
 >
         ! FORTRAN is still alive!
@@ -256,6 +264,15 @@ g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
           \ ['[#_.-]', '\<\%([#_.-]\k\+\|\k\+[#_.-]\)\%(\k*[#_.-]\?\)*\>'],
           \ ['\C\ze[A-Z]', '\C\<[A-Z]\?\k\+[A-Z]\%(\k*[A-Z]\?\)*\>'],
           \ ]
+<
+
+g:textobj#delimited#default_patterns    *g:textobj#delimited#default_patterns*
+        This variable contains default settings. It cannot be changed by user
+        , but it would be helpful to inherit default settings to
+        |g:textobj_delimited_patterns|.
+>
+        let g:textobj_delimited_patterns
+          \ = deepcopy(g:textobj#delimited#default_patterns)
 <
 
 ==============================================================================
