@@ -1,7 +1,5 @@
-*textobj-delimited.jax*  日本語版ヘルプ               Last change:01-Aug-2015.
-
-区切られた文字列の一部分をうまいことするためのテキストオブジェクトです。
-
+*textobj-delimited.jax*         区切られた文字列の一部分を選択する。
+                                                      Last change:03-Oct-2015.
 
 書いた人   : machakann <mckn@outlook.jp>
 ライセンス : NYSL license

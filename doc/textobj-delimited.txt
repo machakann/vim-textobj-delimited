@@ -1,7 +1,5 @@
-*textobj-delimited.txt*                               Last change:01-Aug-2015.
-
-The textobject plugin to do well with each delimited part of a string.
-
+*textobj-delimited.txt*         Select each delimited part of a string.
+                                                      Last change:03-Oct-2015.
 
 Author  : machakann <mckn@outlook.jp>
 License : NYSL license
