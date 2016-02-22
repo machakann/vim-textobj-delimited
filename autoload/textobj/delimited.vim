@@ -298,7 +298,7 @@ function! s:search_destination(kind, orig_pos, mode, count, target, get_the_part
             let _start = _[0]
           endif
         endif
-      end
+      endif
 
       if !is_match_end && is_match_start
         " NOTE: It should be checked _[4] first to update is_rev_order!
@@ -330,7 +330,7 @@ function! s:search_destination(kind, orig_pos, mode, count, target, get_the_part
             let _end = _[3]
           endif
         endif
-      end
+      endif
 
       if is_match_start && is_match_end
         let start = _start
@@ -381,11 +381,9 @@ function! s:parse(string, delimiter)  "{{{
     endif
 
     let head = match(a:string, a:delimiter, tail)
-
     if head == -1 | break | endif
 
     let tail = matchend(a:string, a:delimiter, tail)
-
     let pos += [[head, tail]]
   endwhile
 
@@ -456,11 +454,6 @@ function! s:parse(string, delimiter)  "{{{
       let f[0:1] = [p[0], p[1]]
     endif
   endfor
-
-"   for part in parts
-"     PP! [a:string[part[1] : part[2]], a:string[part[0] : part[3]], part]
-"   endfor
-
   return parts
 endfunction
 "}}}
