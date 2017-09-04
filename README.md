@@ -1,6 +1,9 @@
 textobj-delimited
 =================
 
+[![Build Status](https://travis-ci.org/machakann/vim-textobj-delimited.svg?branch=master)](https://travis-ci.org/machakann/vim-textobj-delimited)
+[![Build status](https://ci.appveyor.com/api/projects/status/m7jd78ldnpshctno/branch/master?svg=true)](https://ci.appveyor.com/project/machakann/vim-textobj-delimited/branch/master)
+
 The textobject plugin to do well with each delimited parts of string.
 
 # Brief explanation
