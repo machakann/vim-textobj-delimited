@@ -1,0 +1,5 @@
+set encoding=utf-8
+execute 'set runtimepath+=' . expand('<sfile>:p:h:h')
+runtime! <sfile>:p:h:h/plugin/textobj/*.vim
+set noswapfile
+let g:assert = themis#helper('assert')
