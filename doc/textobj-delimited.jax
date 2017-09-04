@@ -1,5 +1,5 @@
 *textobj-delimited.jax*         区切られた文字列の一部分を選択する。
-                                                      Last change:30-Apr-2016.
+                                                      Last change:04-Sep-2017.
 
 書いた人   : machakann <mckn{at}outlook.jp>
 ライセンス : NYSL license
@@ -246,10 +246,8 @@ g:textobj_delimited_patterns                    *g:textobj_delimited_patterns*
           \ [',\s*', '\cnamelist\s\+/\h\k*/\s\+\zs\%(\h\k*,\s*\)*\h\k*']
           \ ]
 <
-
-        "g:" スコープ以外でも "t:"、 "w:"、 "b:" スコープの同名変数が使えます
-        。複数の変数が参照可能な範囲にある場合、"b:"、"w:"、"t:"、"g:" の順に
-        優先されます。
+        b:textobj_delimited_patterns が定義されている場合はそのバッファでのみ
+        有効で g:textobj_delimited_patterns よりも優先されます。
 >
         let b:textobj_delimited_patterns = [
           \ ['\m/', '\m\%(/[-.[:alnum:]_~]\+\)\+', 10],
