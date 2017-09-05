@@ -11,7 +11,7 @@ function! s:runtest(test) abort "{{{
   let message = printf(
         \   "field : %s\ncursor: %s\ninput : %s\nselection: %s",
         \   a:test.field,
-        \   a:test.cursor,
+        \   string(a:test.cursor),
         \   input,
         \   &selection)
   call g:assert.equals(got, a:test.expect, message)
